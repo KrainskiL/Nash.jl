@@ -1,0 +1,4 @@
+name = "Nash"
+uuid = "bd078fd0-4306-4e4b-b0ec-dacbec99dedf"
+authors = ["Lukasz Krainski <lukasz.krainski123@gmail.com>"]
+version = "0.1.0"
