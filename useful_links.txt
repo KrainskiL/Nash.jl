@@ -1,0 +1,14 @@
+Ad Teoria Gier w Julia
+
+https://github.com/QuantEcon/Games.jl - pakiet do Teorii Gier w języku Julia
+https://quantecon.github.io/Games.jl/latest/ - dokumentacja pakiet
+
+Ad Gambit
+
+https://github.com/gambit/gambit - github i najlepiej korzystać z wersji tam dostępnej 
+Gambit 15 i 16 mają Pythonowe bindingi przystosowane do Pythona 2.7, tutaj już jest to w wersji przystosowanej do Pythona 3
+
+Ad Gambit Linux i problemy z tym związane
+
+Podstawowy problem - https://github.com/gambitproject/gambit/issues/220 - jest tu też wskazane jego obejście
+Zmiana wersji kompilatora GCC na starszą - https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa
