@@ -1,7 +1,7 @@
 Ad Teoria Gier w Julia
 
 https://github.com/QuantEcon/Games.jl - pakiet do Teorii Gier w języku Julia
-https://quantecon.github.io/Games.jl/latest/ - dokumentacja pakiet
+https://quantecon.github.io/Games.jl/latest/ - dokumentacja pakietu
 
 Ad Gambit
 
