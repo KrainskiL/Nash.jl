@@ -12,3 +12,8 @@ Ad Gambit Linux i problemy z tym związane
 
 Podstawowy problem - https://github.com/gambitproject/gambit/issues/220 - jest tu też wskazane jego obejście
 Zmiana wersji kompilatora GCC na starszą - https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa
+
+Ad symbolic operations in Julia
+https://github.com/JuliaPy/SymPy.jl - aczkolwiek to właściwie Python...
+https://github.com/tomaklutfu/Symbolic.jl - dawna próba, obecnie nie funkcjonuje,
+https://github.com/MasonProtter/Symbolics.jl - inna próba, aczkolwiek obecnie niefunkcjonalna...
