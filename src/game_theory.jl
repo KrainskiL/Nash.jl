@@ -46,4 +46,6 @@ pay
 
 # payoffs jako funkcja
 
-# wizualizacja dla 2 graczy - niestety nie mam zgrabne pomyslu/inspiracji
+# wizualizacja dla 2 graczy - niestety nie widze jakiegos zgrabnego rozwiazania
+# innego niz zwykle wyliczenie tego zbioru - kazda akcja moze byc w strategii mieszanej powiedzmy do 1/1000 jej czesci,
+# obliczamy wszystkie mozliwe payoffs i wizualizujemy
