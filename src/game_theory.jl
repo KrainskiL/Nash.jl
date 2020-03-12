@@ -11,6 +11,72 @@ using Distributions
 # konwersja tuple w array i ponownie array w tuple, gdyz reshape nie ma
 # metody dla array
 
+"""
+`random_2players_game` return random payoff matrices for 2 players with given number of actions
+
+**Input parameters**
+* `dist` - distribution from which payoffs are sampled
+* `p1_size` - number of actions of first player
+* `p2_size` - number of actions of second player
+"""
+function random_2players_game(dist::Distributions.Sampleable, 
+                            p1_size::Int, 
+                            p2_size::Int)
+    return Dict("player"*string(i)=>rand(dist, p1_size, p2_size) for i in 1:2)
+end
+
+"""
+`random_nplayers_game` return random payoffs for n players with given number of actions
+
+**Input parameters**
+* `dist` - distribution from which payoffs are sampled
+* `size` - vector or tuple of number of players' actions
+"""
+function random_nplayers_game(dist::Distributions.Sampleable, 
+                            size::Union{Array{Int,1},Tuple})
+    return Dict("player"*string(i)=>rand(dist, size...) for i in 1:length(size))
+end
+
+game = random_nplayers_game(Binomial(5,0.5),[2,3,3]);
+game["player1"]
+
+
+"""
+`outer` takes vector of vectors and return outer product tensor
+
+**Input parameters**
+* `vecs` - array of vectors to use in outer product
+"""
+function outer(vecs::Array{Array{T,1},1}) where T<:Real 
+    vecs_len = length.(vecs)
+    dims = length(vecs_len)
+    reshaped = [ones(Int,dims) for i in 1:dims]
+    for i in 1:dims
+        reshaped[i][i]=vecs_len[i]
+    end
+    return .*([reshape(v,reshaped[i]...) for (i,v) in enumerate(vecs)]...)
+end
+
+"""
+`get_payoff` produce payoff profile for given game and actions probabilities array
+
+**Input parameters**
+* `game` - array of vectors to use in outer product
+* `s` - vector of actions probabilities vector
+"""
+function get_payoff(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Real
+    if !all(sum.(s).==1)
+        error("Provided vectors are not probabilities distribution")
+    end
+    return Dict(k=>sum(v.*outer(s)) for (k,v) in game)
+end
+
+game = random_nplayers_game(Binomial(5,0.5),[2,2]);
+s = [[0.5,0.5],[0.75,0.25]]
+s[1]'*game["player2"]*s[2]
+get_payoff(game,s)
+# Mateusz raczej powinienes definiowac funkcje jako function <name>(params)
+# wtedy można dodawać metody a w takim zapisie jak niżej nie
 game = function(dist, actions)
 
 reshape(rand(dist, prod(actions)*length(actions)),
