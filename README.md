@@ -3,7 +3,7 @@ Implementation of Games Theory algorithms in Julia
 
 **Documentation**
 
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://krainskil.github.io/Nash.jl/latest)
+[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://krainskil.github.io/Nash.jl/dev)
 
 **Build status**
 
