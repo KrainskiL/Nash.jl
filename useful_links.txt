@@ -18,3 +18,8 @@ https://github.com/JuliaPy/SymPy.jl - aczkolwiek to właściwie Python... - co o
 https://github.com/tomaklutfu/Symbolic.jl - dawna próba, obecnie nie funkcjonuje,
 https://github.com/MasonProtter/Symbolics.jl - inna próba, aczkolwiek obecnie niefunkcjonalna...
 https://github.com/symengine/SymEngine.jl/ - de facto napisane w C++
+
+Ad convex hulls in Julia
+https://github.com/JuliaPolyhedra/QHull.jl
+https://github.com/JuliaPolyhedra/Polyhedra.jl
+https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html
