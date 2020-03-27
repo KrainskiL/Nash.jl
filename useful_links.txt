@@ -23,3 +23,10 @@ Ad convex hulls in Julia
 https://github.com/JuliaPolyhedra/QHull.jl
 https://github.com/JuliaPolyhedra/Polyhedra.jl
 https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html
+
+Ad Markov Chains in Julia
+https://julia.quantecon.org/tools_and_techniques/finite_markov.html
+https://github.com/TuringLang/MCMCChains.jl - aczkolwiek to już MCMC
+https://stackoverflow.com/questions/50274934/efficient-implementation-of-markov-chains-in-julia 
+https://arxiv.org/pdf/1907.08611.pdf oraz https://mambajl.readthedocs.io/en/latest/#
+https://www.juliabloggers.com/monte-carlo-markov-chain/
