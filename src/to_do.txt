@@ -1,0 +1,15 @@
+a) Proste podejście do wyznaczania najlepszej odpowiedzi - dla jednego gracza przy skończonej liczbie graczy i akcji każdego z nich, zgodnie z tym co jest w wolframowym notebooku trzeba:
+- obliczyć wypłaty dla wszystkich akcji,
+- wybrać wszystkie akcje dające najlepszą odpowiedź,
+- zwrócić otoczkę wypukłą dla wybranych akcji
+
+b) jak mamy a) możemy stworzyć funkcję by sprawdzać, czy dla danej gry profil jest równowagą Nasha
+
+c) znajdowanie równowag Nasha przez iterowanie odwzorowania najlepszej odpowiedzi
+- w każdym kroku ze zbioru najlepszych odpowiedzi losowana jest pojedyncza strategia (z rozkładu jednostajnego)
+Co trzeba zrobić?
+- potrzebny początkowy profil strategii
+- znajdujemy profil najlepszej odpowiedzi
+- wybieramy pewne losowe punkty
+- możemy sprawdzić, czy profil jest Równowagą Nasha
+
