@@ -20,18 +20,18 @@ https://github.com/MasonProtter/Symbolics.jl - inna próba, aczkolwiek obecnie n
 https://github.com/symengine/SymEngine.jl/ - de facto napisane w C++
 
 Ad convex hulls in Julia
-https://github.com/JuliaPolyhedra/QHull.jl
-https://github.com/JuliaPolyhedra/Polyhedra.jl
-https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html
+https://github.com/JuliaPolyhedra/QHull.jl - de facto to convex hull z pythona
+https://github.com/JuliaPolyhedra/Polyhedra.jl - podstawowy pakiet w Juli, ważna dla nas funkcja - convexhull
+https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html - bardziej jako wskazówka, generalnie przy wielowymiarowej otoczce wypukłej i tak wykorzystywana jest Polyhedra...
 
 Ad Markov Chains in Julia
-https://julia.quantecon.org/tools_and_techniques/finite_markov.html
-https://github.com/TuringLang/MCMCChains.jl - aczkolwiek to już MCMC
-https://stackoverflow.com/questions/50274934/efficient-implementation-of-markov-chains-in-julia 
-https://arxiv.org/pdf/1907.08611.pdf oraz https://mambajl.readthedocs.io/en/latest/#
-https://www.juliabloggers.com/monte-carlo-markov-chain/
+https://julia.quantecon.org/tools_and_techniques/finite_markov.html - jako wprowadzenie + gotowa biblioteka (aczkolwiek do ekonomii ilościowej)
+https://stackoverflow.com/questions/50274934/efficient-implementation-of-markov-chains-in-julia - jak sprawnie implementować łańcuch Markowa w Julii by Bogumił Kamiński
+https://arxiv.org/pdf/1907.08611.pdf oraz https://mambajl.readthedocs.io/en/latest/# - s.6 - jako ciekawostka
+https://www.juliabloggers.com/monte-carlo-markov-chain/  - jak ktoś chce MCMC
+https://github.com/TuringLang/MCMCChains.jl - jak ktoś chce pakiet dla MCMC
 
-Ad Poisson Process in Julia
+Ad Poisson Process in Julia (jako ciekawostka)
 https://www.juliabloggers.com/flipping-coins-in-continuous-time-the-poisson-process/
 https://hpaulkeeler.com/testing-the-julia-language-with-point-process-simulations/
 

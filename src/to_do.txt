@@ -13,3 +13,8 @@ Co trzeba zrobić?
 - wybieramy pewne losowe punkty
 - możemy sprawdzić, czy profil jest Równowagą Nasha
 
+d) zaburzone odwzorowanie najlepszych odpowiedzi - zazwyczaj wybieramy najlepszą odpowiedź, ale z pewnym prawdopodobieństwem wybieramy dowolną strategię czystą - z gry tworzony jest odpowiedni łańcuch Markowa
+- definiujemy przestrzeń stanów - wszystkie możliwe profile wierzchołków
+- tworzymy macierz przejścia - wykorzystując niezaburzone prawdopodobieństwa przejścia/odwzorowania najlepszej odpowiedzi
+- definiujemy rozkład jednostajny na wszystkich stanach
+- definiujemy dyskretny proces Markowa,
