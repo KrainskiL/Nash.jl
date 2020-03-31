@@ -2,6 +2,7 @@
 # rozkladow prawdopodobienstwa
 
 using Distributions
+using LinearAlgebra
 
 # nawiasy kwadratowe przy wprowadzaniu danych - array, tuple - okragle
 # poniewaz nie jest to az tak intuicyjne pisze to tak, by w obu przypadkach
@@ -12,6 +13,19 @@ using Distributions
 # metody dla array
 
 """
+`generate_game` return given payoff matrices for given number
+of players with given number of actions
+
+**Input parameters**
+* `payoffm` - payoff matrix
+"""
+function generate_game(payoffm...)
+    !all(@. collect(payoffm) isa Array{<: Real}) && return @error "All arguments have to be arrays"
+    !all(y->y==size.(payoffm)[1], size.(payoffm)) && return @error "All arrays should have same dimension"
+    Dict("player"*string(i)=>collect(payoffm)[i] for i in 1:length(payoffm))
+end
+
+"""
 `random_2players_game` return random payoff matrices for 2 players with given number of actions
 
 **Input parameters**
@@ -19,8 +33,8 @@ using Distributions
 * `p1_size` - number of actions of first player
 * `p2_size` - number of actions of second player
 """
-function random_2players_game(dist::Distributions.Sampleable, 
-                            p1_size::Int, 
+function random_2players_game(dist::Distributions.Sampleable,
+                            p1_size::Int,
                             p2_size::Int)
     return Dict("player"*string(i)=>rand(dist, p1_size, p2_size) for i in 1:2)
 end
@@ -32,7 +46,7 @@ end
 * `dist` - distribution from which payoffs are sampled
 * `size` - vector or tuple of number of players' actions
 """
-function random_nplayers_game(dist::Distributions.Sampleable, 
+function random_nplayers_game(dist::Distributions.Sampleable,
                             size::Union{Array{Int,1},Tuple})
     return Dict("player"*string(i)=>rand(dist, size...) for i in 1:length(size))
 end
@@ -47,7 +61,7 @@ game["player1"]
 **Input parameters**
 * `vecs` - array of vectors to use in outer product
 """
-function outer(vecs::Array{Array{T,1},1}) where T<:Real 
+function outer(vecs::Array{Array{T,1},1}) where T<:Real
     vecs_len = length.(vecs)
     dims = length(vecs_len)
     reshaped = [ones(Int,dims) for i in 1:dims]
@@ -62,7 +76,7 @@ end
 
 **Input parameters**
 * `game` - array of vectors to use in outer product
-* `s` - vector of actions probabilities vector
+* `s` - vector of actions probabilities
 """
 function get_payoff(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Real
     if !all(sum.(s).==1)
@@ -75,6 +89,41 @@ game = random_nplayers_game(Binomial(5,0.5),[2,2]);
 s = [[0.5,0.5],[0.75,0.25]]
 s[1]'*game["player2"]*s[2]
 get_payoff(game,s)
+
+"""
+`best_reply` return best reply of given player to actions of his counterparts
+(defined by strategy profile)
+
+**Input parameters**
+* `game` - dictionary of players and their payoff matrices
+* `s` - vector of actions probabilities
+* `k` - number of player for which the best reply is returned
+"""
+function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int) where T<:Real
+    payoffs=[] #Vector{<:Real} albo z where nie dziala - no idea why
+    # musi byc any lecz nie jest to optymalne gdyz taki vector wolniej sie przeszukuje
+    for i in 1:length(s[k])
+        s[k] = zeros(length(s[k]))
+        s[k][i] = 1
+        push!(payoffs, get_payoff(game, s)["player"*string(k)])
+    end
+    pos = (payoffs .== maximum(payoffs))
+    # a fragment which s specific for two players
+    # extending to n players will require some generalization with pasting content
+    # and evaluation (e.g.) [string(pos)*rep(":", n-1)] which I am not aware of in Julia
+    # at the moment / I will mark as TODO
+    # furthermore the xamples we made @ class were also for players
+    eyemat = Matrix(I, size(game["player"*string(k)])[1], size(game["player"*string(k)])[2])
+    k == 1 && return eyemat[pos, :]
+    k == 2 && return eyemat[:, pos]
+    # if you happen to have a better idea how to represent return values feel free to amend
+
+end
+
+best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 1)
+best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 2)
+best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 1)
+
 # Mateusz raczej powinienes definiowac funkcje jako function <name>(params)
 # wtedy można dodawać metody a w takim zapisie jak niżej nie
 game = function(dist, actions)
