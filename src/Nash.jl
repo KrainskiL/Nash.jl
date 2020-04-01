@@ -2,9 +2,13 @@ module Nash
 
 #packages
 using Distributions
+using LinearAlgebra
+using CDDLib
+using Polyhedra
 
 #functions
-export random_2players_game, random_nplayers_game, outer, get_payoff
+export generate_game, random_2players_game, random_nplayers_game, outer,
+get_payoff, best_reply, is_nash_q
 export game, getpayoff
 
 #files

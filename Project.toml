@@ -4,5 +4,8 @@ authors = ["Lukasz Krainski <lukasz.krainski123@gmail.com>"]
 version = "0.1.0"
 
 [deps]
+CDDLib = "3391f64e-dcde-5f30-b752-e11513730f60"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Polyhedra = "67491407-f73d-577b-9b50-8179a7c68029"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
