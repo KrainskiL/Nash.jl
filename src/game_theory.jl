@@ -5,6 +5,7 @@ using Distributions
 using LinearAlgebra
 using CDDLib
 using Polyhedra
+using MeshCat
 
 # nawiasy kwadratowe przy wprowadzaniu danych - array, tuple - okragle
 # poniewaz nie jest to az tak intuicyjne pisze to tak, by w obu przypadkach
@@ -105,19 +106,17 @@ get_payoff(game,s)
 """
 function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int,
     ;return_val::String="array") where T<:Real
+    length(game) >2 && return @error "Only two-players game supported at the moment." #TODO
+    s_temp=deepcopy(s)
     payoffs=[] #Vector{<:Real} albo z where nie dziala - no idea why
     # musi byc any lecz nie jest to optymalne gdyz taki vector wolniej sie przeszukuje
-    for i in 1:length(s[k])
-        s[k] = zeros(length(s[k]))
-        s[k][i] = 1
-        push!(payoffs, get_payoff(game, s)["player"*string(k)])
+    for i in 1:length(s_temp[k])
+        s_temp[k] = zeros(length(s[k]))
+        s_temp[k][i] = 1
+        push!(payoffs, get_payoff(game, s_temp)["player"*string(k)])
     end
     pos = (payoffs .== maximum(payoffs))
-    # a fragment which s specific for two players
-    # extending to n players will require some generalization with pasting content
-    # and evaluation (e.g.) [string(pos)*rep(":", n-1)] which I am not aware of in Julia
-    # at the moment / I will mark as TODO
-    # furthermore the xamples we made @ class were also for players
+    # a fragment which is specific for two players
     eyemat = Matrix(I, size(game["player"*string(k)])[1], size(game["player"*string(k)])[2])
     if k == 1 val2ret = eyemat[pos, :]
     elseif k == 2 val2ret = transpose(eyemat[:, pos])
@@ -125,16 +124,14 @@ function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int,
     if return_val == "chull"
         polyh = polyhedron(vrep(val2ret), CDDLib.Library())
         return convexhull(polyh,polyh)
-        # one may plot this unless its in 2d
-        # using Plots; plot(pch, color="green", alpha=0.1)
     else return val2ret
     end
 
 end
 
-a1 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 1, return_val = "chull")
-a2 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 2, return_val = "chull")
-a3 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 1)
+a1 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 1, return_val="chull")
+#a2 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1], [2 0; 0 1]), [[1, 0], [1, 0]], 2)
+a3 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 1, return_val = "chull")
 a4 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 2, return_val = "chull")
 
 """
@@ -146,17 +143,37 @@ Nash equilibrium.
 * `s` - vector of actions probabilities
 """
 function is_nash_q(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Real
-    nashqs=[]
+    nashqs=Dict{String,Bool}()
     for k in 1:length(game)
         st = s[k]
         br = best_reply(game, s, k, return_val="chull")
         polyh = polyhedron(vrep([st]), CDDLib.Library())
         pint = intersect(br, polyh)
-        push!(nashqs, npoints(pint) != 0)
+        nashqs["player"*string(k)] = (npoints(pint) != 0)
     end
-    all(nashqs) ? println("Nash equilibrium") : println("No Nash equilibrium")
-    return nashqs #TODO return as Dict
+    nashqs
+    all(values(nashqs)) ? nashqs["Nash"] = true : nashqs["Nash"] = false
+    return nashqs
 end
+
+is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]])
+is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[0, 1], [0, 1]])
+
+"""
+`plot_br` plots best reply in the form of simplex (3d and above)
+
+**Input parameters**
+* `br` - best reply function (with return_val="chull") output
+"""
+function plot_br(br::CDDLib.Polyhedron{T}) where T<:Real
+    br_mesh=Polyhedra.Mesh(br)
+    vis = MeshCat.Visualizer()
+    setobject!(vis, br_mesh)
+    IJuliaCell(vis)
+end
+#TODO make stable for 1d, 2d https://github.com/rdeits/MeshCat.jl/blob/master/notebooks/demo.ipynb
+
+plot_br(a3)
 
 # Mateusz raczej powinienes definiowac funkcje jako function <name>(params)
 # wtedy można dodawać metody a w takim zapisie jak niżej nie
