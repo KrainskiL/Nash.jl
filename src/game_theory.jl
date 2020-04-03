@@ -106,7 +106,6 @@ get_payoff(game,s)
 """
 function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int,
     ;return_val::String="array") where T<:Real
-    length(game) >2 && return @error "Only two-players game supported at the moment." #TODO
     s_temp=deepcopy(s)
     payoffs=[] #Vector{<:Real} albo z where nie dziala - no idea why
     # musi byc any lecz nie jest to optymalne gdyz taki vector wolniej sie przeszukuje
@@ -116,11 +115,8 @@ function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int,
         push!(payoffs, get_payoff(game, s_temp)["player"*string(k)])
     end
     pos = (payoffs .== maximum(payoffs))
-    # a fragment which is specific for two players
-    eyemat = Matrix(I, size(game["player"*string(k)])[1], size(game["player"*string(k)])[2])
-    if k == 1 val2ret = eyemat[pos, :]
-    elseif k == 2 val2ret = transpose(eyemat[:, pos])
-    end
+    eyemat = Matrix(I, size(game["player1"])[k], size(game["player1"])[k])
+    val2ret = eyemat[pos, :]
     if return_val == "chull"
         polyh = polyhedron(vrep(val2ret), CDDLib.Library())
         return convexhull(polyh,polyh)
@@ -130,7 +126,7 @@ function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int,
 end
 
 a1 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 1, return_val="chull")
-#a2 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1], [2 0; 0 1]), [[1, 0], [1, 0]], 2)
+a2 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1], [2 0; 0 1]), [[1, 0], [1, 0]], 2)
 a3 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 1, return_val = "chull")
 a4 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 2, return_val = "chull")
 
@@ -152,12 +148,13 @@ function is_nash_q(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Re
         nashqs["player"*string(k)] = (npoints(pint) != 0)
     end
     nashqs
-    all(values(nashqs)) ? nashqs["Nash"] = true : nashqs["Nash"] = false
+    nashqs["Nash"] = all(values(nashqs))
     return nashqs
 end
 
 is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]])
 is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[0, 1], [0, 1]])
+is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[1, 0], [9/10, 1/10]])
 
 """
 `plot_br` plots best reply in the form of simplex (3d and above)
