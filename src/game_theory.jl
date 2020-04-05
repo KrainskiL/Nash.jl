@@ -1,19 +1,9 @@
-# Wykorzystamy pakiet distributions, by moc losowac z podstawowych
-# rozkladow prawdopodobienstwa
-
 using Distributions
 using LinearAlgebra
 using CDDLib
 using Polyhedra
 using MeshCat
 
-# nawiasy kwadratowe przy wprowadzaniu danych - array, tuple - okragle
-# poniewaz nie jest to az tak intuicyjne pisze to tak, by w obu przypadkach
-# julia cos wyplula (jeśli tylko to, co zada uzytkownik ma sens)
-
-# generowanie losowej gry, okreslone przez losowy rozklad i liczbe akcji
-# konwersja tuple w array i ponownie array w tuple, gdyz reshape nie ma
-# metody dla array
 
 """
 `generate_game` return given payoff matrices for given number
@@ -25,9 +15,11 @@ of players with given number of actions
 function generate_game(payoffm...)
     !all(@. collect(payoffm) isa Array{<: Real}) && return @error "All arguments have to be arrays"
     !all(y->y==size.(payoffm)[1], size.(payoffm)) && return @error "All arrays should have same dimension"
+    !all(size.(payoffm) .|> length .== length(payoffm)) && return @error "Dimensions of payoff matrices should equal to number of players (input arguments)"
     Dict("player"*string(i)=>collect(payoffm)[i] for i in 1:length(payoffm))
-    #note: collect is costly; maybe any other ideas?
 end
+
+g = generate_game([1 0; 0 1], [1 0; 0 1])
 
 """
 `random_2players_game` return random payoff matrices for 2 players with given number of actions
@@ -83,7 +75,7 @@ end
 * `s` - vector of actions probabilities
 """
 function get_payoff(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Real
-    if !all(sum.(s).==1)
+    if !all(@. round(sum(s),digits = 2) ==1)
         error("Provided vectors are not probabilities distribution")
     end
     return Dict(k=>sum(v.*outer(s)) for (k,v) in game)
@@ -102,37 +94,39 @@ get_payoff(game,s)
 * `game` - dictionary of players and their payoff matrices
 * `s` - vector of actions probabilities
 * `k` - number of player for which the best reply is returned
+* `epsil` - probability of error (if the answer is disturbed)
 * `return_val` - type of returned value ("array" or "chull")
 """
-function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}}, k::Int,
-    ;return_val::String="array") where T<:Real
+function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}} where T<:Real,
+    k::Int, epsil::F=0.0 ;return_val::String="array") where F<:Real
+    (epsil < 0 || epsil > 1) && throw(ArgumentError("Probability of error (epsil) should be in range 0-1"))
+    #TODO error should exit function
+    action_no = size(game["player1"])[k]
     s_temp=deepcopy(s)
-    payoffs=[] #Vector{<:Real} albo z where nie dziala - no idea why
-    # musi byc any lecz nie jest to optymalne gdyz taki vector wolniej sie przeszukuje
+    payoffs=[] #TODO not Any type
     for i in 1:length(s_temp[k])
         s_temp[k] = zeros(length(s[k]))
         s_temp[k][i] = 1
         push!(payoffs, get_payoff(game, s_temp)["player"*string(k)])
     end
-    pos = (payoffs .== maximum(payoffs))
-    eyemat = Matrix(I, size(game["player1"])[k], size(game["player1"])[k])
+    eyemat = Matrix(I, action_no, action_no)
+    (epsil != 0 && rand() < epsil) ? pos = rand([false true], action_no) : pos = (payoffs .== maximum(payoffs))
+    all(pos .== 0) ? pos[rand(1:action_no)] = 1 : nothing
     val2ret = eyemat[pos, :]
     if return_val == "chull"
         polyh = polyhedron(vrep(val2ret), CDDLib.Library())
         return convexhull(polyh,polyh)
     else return val2ret
     end
-
 end
 
-a1 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]], 1, return_val="chull")
-a2 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1], [2 0; 0 1]), [[1, 0], [1, 0]], 2)
-a3 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 1, return_val = "chull")
-a4 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 2, return_val = "chull")
+
+a1 = best_reply(generate_game([1 0; 0 1], [1 0; 0 1]), [[1.0, 0.0], [1, 0]], 1, 0.5) # perturbation epsil=0.5
+a2 = best_reply(generate_game(Matrix(I,3,3), Matrix(I,3,3)), [[1/2,1/2,0],[1/3,1/3,1/3]], 1, return_val = "chull") # no perturbation
 
 """
-`is_nash_q` return logical vector indicating whether given profile is
-Nash equilibrium.
+`is_nash_q` return a dictionary of logical vectors indicating whether
+given profile is Nash equilibrium.
 
 **Input parameters**
 * `game` - dictionary of players and their payoff matrices
@@ -153,14 +147,12 @@ function is_nash_q(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Re
 end
 
 is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[1, 0], [1, 0]])
-is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[0, 1], [0, 1]])
-is_nash_q(generate_game([1 0 ; 0 1], [1 0; 0 1]), [[1, 0], [9/10, 1/10]])
 
 """
-`plot_br` plots best reply in the form of simplex (3d and above)
+`plot_br` plot best reply in the form of simplex (3d and above)
 
 **Input parameters**
-* `br` - best reply function (with return_val="chull") output
+* `br` - best_reply function (with return_val="chull") output
 """
 function plot_br(br::CDDLib.Polyhedron{T}) where T<:Real
     br_mesh=Polyhedra.Mesh(br)
@@ -170,10 +162,78 @@ function plot_br(br::CDDLib.Polyhedron{T}) where T<:Real
 end
 #TODO make stable for 1d, 2d https://github.com/rdeits/MeshCat.jl/blob/master/notebooks/demo.ipynb
 
-plot_br(a3)
+plot_br(a2)
+
+"""
+`_select_random` internal function for best reply iteration
+return a random point on the given best reply simplex
+
+**Input parameters**
+* `game` - dictionary of players and their payoff matrices
+* `s` - vector of actions probabilities
+* `br` - array of best reply
+"""
+function _select_random(game::Dict{String,<:Array}, s::Vector{Vector{T}},
+    br::Array{Array{Bool}}) where T<:Real
+    s_iter = [] #TODO: not Any type
+    for i in 1:length(game)
+            s_iter_temp = fill(0.0, size(s[i]))' #size: number of actions
+            findzero = mapslices(sum, convert(Array{Int,2},br[i]), dims = 1)
+            s_iter_temp[findzero .!= 0] = rand(sum(findzero))  #where best reply is non-zero
+            s_iter_temp = s_iter_temp ./ sum(s_iter_temp)
+            s_iter_temp = reshape(s_iter_temp, size(s[i]))
+            push!(s_iter, s_iter_temp)
+    end
+    s_iter = convert(typeof(s), s_iter)
+    return s_iter
+end
+
+"""
+`iterate_best_reply` return an array of arrays representing each players'
+game strategies (action probabilities) history in every iteration
+
+**Input parameters**
+* `game` - dictionary of players and their payoff matrices
+* `s` - vector of actions probabilities
+* `it_num` - an integer specifying how many iterations should be repeated
+"""
+function iterate_best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}} where T<:Real,
+    epsil::F=0.0, it_num::Int=10)  where F<:Real
+    s_temp = deepcopy(s)
+    s_history = [] #TODO not Any type
+    push!(s_history, s_temp)
+    for i in 1:it_num
+        br = Array{Bool}[]
+        for i in 1:length(game)
+            push!(br, best_reply(game, s_temp, i, epsil))
+        end
+        s_temp = _select_random(game, s_temp, br)
+        push!(s_history, s_temp)
+    end
+    println("After ", it_num, " iterations")
+    all(values(is_nash_q(game, s_history[length(s_history)]))) ?
+        println("Nash equilibrium found") : println("Nash equilibrium not found")
+    return s_history
+end
+
+game = generate_game(Matrix(I, 3, 3), Matrix(I, 3, 3))
+s = [[1/2,1/2, 0], [1/3,1/3,1/3]]
+game_history = iterate_best_reply(game, s, 1/3, 7) # perturbation epsil=1/3
 
 # Mateusz raczej powinienes definiowac funkcje jako function <name>(params)
 # wtedy można dodawać metody a w takim zapisie jak niżej nie
+
+# Wykorzystamy pakiet distributions, by moc losowac z podstawowych
+# rozkladow prawdopodobienstwa
+
+# nawiasy kwadratowe przy wprowadzaniu danych - array, tuple - okragle
+# poniewaz nie jest to az tak intuicyjne pisze to tak, by w obu przypadkach
+# julia cos wyplula (jeśli tylko to, co zada uzytkownik ma sens)
+
+# generowanie losowej gry, okreslone przez losowy rozklad i liczbe akcji
+# konwersja tuple w array i ponownie array w tuple, gdyz reshape nie ma
+# metody dla array
+
 game = function(dist, actions)
 
 reshape(rand(dist, prod(actions)*length(actions)),
