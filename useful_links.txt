@@ -1,37 +1,38 @@
-Ad Teoria Gier w Julia
+Game Theory in Julia
 
-https://github.com/QuantEcon/Games.jl - pakiet do Teorii Gier w języku Julia
-https://quantecon.github.io/Games.jl/latest/ - dokumentacja pakietu
+https://github.com/QuantEcon/Games.jl - main game theory package in Julia
+https://quantecon.github.io/Games.jl/latest/ - documentation of this package
 
 Ad Gambit
 
-https://github.com/gambit/gambit - github i najlepiej korzystać z wersji tam dostępnej 
-Gambit 15 i 16 mają Pythonowe bindingi przystosowane do Pythona 2.7, tutaj już jest to w wersji przystosowanej do Pythona 3
+https://github.com/gambit/gambit - Gambit GitHub - Gambit 15 and 16 have bindings to obsolete Python 2, only that version has Python 3 bindings
 
-Ad Gambit Linux i problemy z tym związane
+Gambit & Linux
 
-Podstawowy problem - https://github.com/gambitproject/gambit/issues/220 - jest tu też wskazane jego obejście
-Zmiana wersji kompilatora GCC na starszą - https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa
+Main issue and its fix - https://github.com/gambitproject/gambit/issues/220 
+How to change gcc compilator - https://linuxconfig.org/how-to-switch-between-multiple-gcc-and-g-compiler-versions-on-ubuntu-20-04-lts-focal-fossa
 
 Ad symbolic operations in Julia
-https://github.com/JuliaPy/SymPy.jl - aczkolwiek to właściwie Python... - co oznacza, ze jego wykorzystanie będzie wolne...
-https://github.com/tomaklutfu/Symbolic.jl - dawna próba, obecnie nie funkcjonuje,
-https://github.com/MasonProtter/Symbolics.jl - inna próba, aczkolwiek obecnie niefunkcjonalna...
-https://github.com/symengine/SymEngine.jl/ - de facto napisane w C++
+https://github.com/JuliaPy/SymPy.jl - de facto Python
+https://github.com/tomaklutfu/Symbolic.jl
+https://github.com/MasonProtter/Symbolics.jl - not functioning
+https://github.com/symengine/SymEngine.jl/ - written in C++
 
 Ad convex hulls in Julia
 https://github.com/JuliaPolyhedra/QHull.jl - de facto to convex hull z pythona
-https://github.com/JuliaPolyhedra/Polyhedra.jl - podstawowy pakiet w Juli, ważna dla nas funkcja - convexhull
-https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html - bardziej jako wskazówka, generalnie przy wielowymiarowej otoczce wypukłej i tak wykorzystywana jest Polyhedra...
+https://github.com/JuliaPolyhedra/Polyhedra.jl - main package for conxex hull in Julia
+https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html - more as a hint
 
 Ad Markov Chains in Julia
-https://julia.quantecon.org/tools_and_techniques/finite_markov.html - jako wprowadzenie + gotowa biblioteka (aczkolwiek do ekonomii ilościowej)
-https://stackoverflow.com/questions/50274934/efficient-implementation-of-markov-chains-in-julia - jak sprawnie implementować łańcuch Markowa w Julii by Bogumił Kamiński
-https://arxiv.org/pdf/1907.08611.pdf oraz https://mambajl.readthedocs.io/en/latest/# - s.6 - jako ciekawostka
-https://www.juliabloggers.com/monte-carlo-markov-chain/  - jak ktoś chce MCMC
-https://github.com/TuringLang/MCMCChains.jl - jak ktoś chce pakiet dla MCMC
+https://julia.quantecon.org/tools_and_techniques/finite_markov.html - as an introduction to the topic & package
+https://stackoverflow.com/questions/50274934/efficient-implementation-of-markov-chains-in-julia - efficient Markov Chain implementation in Julia by Bogumił Kamiński
+https://arxiv.org/pdf/1907.08611.pdf oraz https://mambajl.readthedocs.io/en/latest/# - s.6 - 
+https://www.juliabloggers.com/monte-carlo-markov-chain/  - about MCMC in Julia
+https://github.com/TuringLang/MCMCChains.jl - MCMC package
+https://github.com/maxmouchet/HMMBase.jl - hidden Markov Models package
 
-Ad Poisson Process in Julia (jako ciekawostka)
+
+Ad Poisson Process in Julia 
 https://www.juliabloggers.com/flipping-coins-in-continuous-time-the-poisson-process/
 https://hpaulkeeler.com/testing-the-julia-language-with-point-process-simulations/
 
