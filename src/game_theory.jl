@@ -3,6 +3,10 @@ using LinearAlgebra
 using CDDLib
 using Polyhedra
 using MeshCat
+using Combinatorics
+using IterTools
+using QuantEcon
+using Plots
 
 
 """
@@ -109,7 +113,7 @@ function best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}} where T<:Re
         s_temp[k][i] = 1
         push!(payoffs, get_payoff(game, s_temp)["player"*string(k)])
     end
-    eyemat = Matrix(I, action_no, action_no)
+    eyemat = Matrix(1I, action_no, action_no)
     (epsil != 0 && rand() < epsil) ? pos = rand([false true], action_no) : pos = (payoffs .== maximum(payoffs))
     all(pos .== 0) ? pos[rand(1:action_no)] = 1 : nothing
     val2ret = eyemat[pos, :]
@@ -174,7 +178,7 @@ return a random point on the given best reply simplex
 * `br` - array of best reply
 """
 function _select_random(game::Dict{String,<:Array}, s::Vector{Vector{T}},
-    br::Array{Array{Bool}}) where T<:Real
+    br::Array{Array{Int64}}) where T<:Real
     s_iter = [] #TODO: not Any type
     for i in 1:length(game)
             s_iter_temp = fill(0.0, size(s[i]))' #size: number of actions
@@ -198,12 +202,12 @@ game strategies (action probabilities) history in every iteration
 * `it_num` - an integer specifying how many iterations should be repeated
 """
 function iterate_best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}} where T<:Real,
-    epsil::F=0.0, it_num::Int=10)  where F<:Real
+    epsil::F=0.0, it_num::Int=10)  where F<:Real #TODO epsil not default
     s_temp = deepcopy(s)
     s_history = [] #TODO not Any type
     push!(s_history, s_temp)
     for i in 1:it_num
-        br = Array{Bool}[]
+        br = Array{Int64}[]
         for i in 1:length(game)
             push!(br, best_reply(game, s_temp, i, epsil))
         end
@@ -219,6 +223,84 @@ end
 game = generate_game(Matrix(I, 3, 3), Matrix(I, 3, 3))
 s = [[1/2,1/2, 0], [1/3,1/3,1/3]]
 game_history = iterate_best_reply(game, s, 1/3, 7) # perturbation epsil=1/3
+
+"""
+`_next state` internal function finding the index of next state
+(next simplex vertex)
+
+**Input parameters**
+* `game` - dictionary of players and their payoff matrices
+* `s` - vector of actions probabilities
+* `states_dict` - a dictionary of simplex vertices (states)
+"""
+function _next_state(game::Dict{String,<:Array}, s::Vector{Vector{T}},
+    states_dict::Dict{<:Array, Int64}) where T<:Real
+    br = Array{Int64}[]
+    for i in 1:length(game)
+        push!(br,best_reply(game, s, i))
+    end
+    next = _select_random(game, s, br)
+    get(states_dict, next, 0)
+end
+
+"""
+`game2markov` return Markov chain of a given game and given vector of action
+probabilities
+
+**Input parameters**
+* `game` - dictionary of players and their payoff matrices
+* `s` - vector of actions probabilities
+"""
+function game2markov(game::Dict{String,<:Array}, s::Vector{Vector{T}}) where T<:Real
+    # problem: 2 players
+    permuts = permutations( vcat(1, fill(0, size(s[1])[1]-1 )) ) |> collect |> unique
+    grid_exp = Iterators.product(collect(permuts),collect(permuts)) |> collect
+    to_states = Dict(string(i) => collect(grid_exp[i]) for i in 1:length(grid_exp))
+    to_states_inv = Dict(collect(grid_exp[i]) => i for i in 1:length(grid_exp))
+
+    trans = Matrix(0I, length(to_states), length(to_states))
+    for i in 1:length(to_states)
+        indx = _next_state(game, to_states[string(i)], to_states_inv)
+        trans[i, indx] = 1/length(indx) # distributed equally when more than 1 best reply
+    end
+
+    init = Array(1:length(to_states))
+    mc = MarkovChain(trans, init)
+    return mc
+end
+
+game = generate_game(Matrix(1I, 3, 3), Matrix(I, 3, 3))
+s = [[1, 0, 0],[0, 1, 0]]
+mc = game2markov(game, s)
+simulate(mc, 9, init = 3)
+simulate(mc, 9) # random initial condition
+
+is_irreducible(mc) # can we reach any state from any other state?
+communication_classes(mc)
+period(mc)
+is_aperiodic(mc)
+stationary_distributions(mc)
+# TODO AS wizualizacja grafow
+# TODO AS zaburzenia
+
+"""
+`plot_markov` plots a path of Markov chain simulation of a given time length
+and all initial values
+
+**Input parameters**
+* `no_steps` - scalar of time length (number of iterations)
+* `mc` - Markov chain of a game (game2markov output function)
+"""
+function plot_markov(no_steps::Int64,
+    mc::MarkovChain{Int64,Array{Int64,2},Array{Int64,1}})
+    no_states = stationary_distributions(mc)[1] |> length
+    for i in 1:no_states
+        line = simulate(mc, 10, init = i)
+        i == 1 ? display(plot(1:no_steps, line, label = string(i), lw = 2)) : display(plot!(line, label = string(i), lw = 2))
+    end
+end
+
+plot_markov(10, mc)
 
 # Mateusz raczej powinienes definiowac funkcje jako function <name>(params)
 # wtedy można dodawać metody a w takim zapisie jak niżej nie

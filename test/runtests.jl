@@ -4,6 +4,9 @@ using Distributions
 using Polyhedra
 using CDDLib
 using LinearAlgebra
+using Combinatorics
+using IterTools
+using QuantEcon
 
 @testset "games" begin
 
@@ -46,4 +49,13 @@ game_hist = iterate_best_reply(game, s, 0.5, 7)
 @test length(game_hist) == 8
 @test game_hist isa Array{Any,1} #TODO in future not Any type
 @test game_hist[1] isa Array{Array{Float64,1},1}
+
+game = generate_game(Matrix(1I, 3, 3), Matrix(I, 3, 3))
+s = [[1, 0, 0],[0, 1, 0]]
+mc = game2markov(game, s)
+@test mc isa MarkovChain{Int64,Array{Int64,2},Array{Int64,1}}
+@test all(simulate(mc, 4, init = 1) .== 1)
+@test is_irreducible(mc) == false
+@test period(mc) == 2
+@test is_aperiodic(mc) == false
 end
