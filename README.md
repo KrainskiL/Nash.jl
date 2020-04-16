@@ -12,11 +12,13 @@ Implementation of Games Theory algorithms in Julia
 
 **Instalation instructions**
 
-Add Nash using Pkg
+Add Nash by running following code in Julia REPL
 
 ```julia
 ] add https://github.com/KrainskiL/Nash.jl
 ```
+
+Link to [API Reference](https://krainskil.github.io/Nash.jl/dev/reference/)
 
 **Example usage**
 
@@ -28,3 +30,5 @@ random_2players_game(Normal(0,2),2,3)
 >  "player2" => [2.80393 -1.9793 -1.52571; -1.50642 -0.0574021 1.0391]
 >  "player1" => [2.2755 -0.224079 0.0240092; 0.466656 -2.85657 2.40831]
 ```
+
+Please check `/examples/example.jl` for more.
