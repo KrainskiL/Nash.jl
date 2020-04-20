@@ -37,4 +37,10 @@ https://www.juliabloggers.com/flipping-coins-in-continuous-time-the-poisson-proc
 https://hpaulkeeler.com/testing-the-julia-language-with-point-process-simulations/
 
 Ad differential equations in Julia
-https://github.com/SciML/DifferentialEquations.jl
+https://github.com/SciML/DifferentialEquations.jl - main git page of DifferentialEquations.jl (most important package)
+https://docs.sciml.ai/stable/index.html - documentation
+https://julialang.org/blog/2019/01/fluxdiffeq/ - about Neural Differential Equations in Julia
+
+Ad MeshCat
+https://github.com/rdeits/meshcat - main meshcat git page
+https://github.com/rdeits/MeshCat.jl - MeshCat Julia git page
