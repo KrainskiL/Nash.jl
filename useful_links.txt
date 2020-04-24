@@ -19,7 +19,7 @@ https://github.com/MasonProtter/Symbolics.jl - not functioning
 https://github.com/symengine/SymEngine.jl/ - written in C++
 
 Ad convex hulls in Julia
-https://github.com/JuliaPolyhedra/QHull.jl - de facto to convex hull z pythona
+https://github.com/JuliaPolyhedra/QHull.jl - de facto pyhton convex hull
 https://github.com/JuliaPolyhedra/Polyhedra.jl - main package for conxex hull in Julia
 https://juliareach.github.io/LazySets.jl/release-1.11/man/convex_hulls.html - more as a hint
 
@@ -40,7 +40,19 @@ Ad differential equations in Julia
 https://github.com/SciML/DifferentialEquations.jl - main git page of DifferentialEquations.jl (most important package)
 https://docs.sciml.ai/stable/index.html - documentation
 https://julialang.org/blog/2019/01/fluxdiffeq/ - about Neural Differential Equations in Julia
+https://tutorials.sciml.ai/html/introduction/03-optimizing_diffeq_code.html - some hints how to optimize DiffEq
 
-Ad MeshCat
+Ad MeshCat & plotting
 https://github.com/rdeits/meshcat - main meshcat git page
 https://github.com/rdeits/MeshCat.jl - MeshCat Julia git page
+https://github.com/JuliaPlots/Plots.jl - main plot library in Julia (2D)
+
+Ad optimization in Julia
+https://github.com/kul-forbes/StructuredOptimization.jl - as a curiosity
+https://github.com/JuliaManifolds/Manopt.jl - optimization of manifolds
+https://www.juliaopt.org/ - main page for the majority of optimization packages
+https://julia.quantecon.org/more_julia/optimization_solver_packages.html - depiction of main optimization packages in Julia 
+
+Papers about optimization in Julia
+https://people.orie.cornell.edu/mru8/doc/udell14_convex.pdf - convex optimization
+https://arxiv.org/pdf/1909.10451.pdf - Stochastic Programming in Julia
