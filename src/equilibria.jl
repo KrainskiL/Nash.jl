@@ -16,6 +16,22 @@ function get_payoff(game::Dict{String,<:AbstractArray},
     return Dict(k=>sum(v.*outer(s)) for (k,v) in game)
 end
 
+
+"""
+    get_payoff(game::Dict{String,<:AbstractArray}, s::Vector{Vector{SymPy.Sym}})
+
+Produces payoff profile for given game and actions probabilities symbolic array
+
+**Input parameters**
+* `game::Dict{String,<:AbstractArray}` - array of vectors to use in outer product
+* `s::Vector{Vector{SymPy.Sym}}` - collection of actions probabilities for each player in a game
+"""
+function get_payoff(game::Dict{String,<:AbstractArray},
+                s::Vector{Vector{SymPy.Sym}})
+    return Dict(k=>sum(v.*outer(s)) for (k,v) in game)
+end
+
+
 """
     best_reply(game::Dict{String,<:Array}, s::Vector{Vector{T}} where T<:Real,
     k::Int, epsil::F=0.0 ;return_val::String = "array") where F<:Real

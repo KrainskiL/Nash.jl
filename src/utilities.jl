@@ -22,6 +22,25 @@ end
 
 
 """
+    outer(vecs::Array{Array{SymPy.Sym,1},1})
+
+Takes vector of symbolic vectors and return outer product tensor
+
+**Input parameters**
+* `vecs::Array{Array{SymPy.Sym,1},1}` - array of symbolic vectors to use in outer product
+"""
+function outer(vecs::Array{Array{SymPy.Sym,1},1})
+    vecs_len = length.(vecs)
+    dims = length(vecs_len)
+    reshaped = [ones(Int,dims) for i in 1:dims]
+    for i in 1:dims
+        reshaped[i][i]=vecs_len[i]
+    end
+    return .*([reshape(v,reshaped[i]...) for (i,v) in enumerate(vecs)]...)
+end
+
+
+"""
     _next_state(game::Dict{String,<:Array}, s::Vector{Vector{T}},
             states_dict::Dict{<:Array, Int64}) where T<:Real
 
