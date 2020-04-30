@@ -2,6 +2,8 @@
 ## Prepare libraries ##
 #######################
 
+# export JULIA_NUM_THREADS=4
+
 BASE_FOLDER = pwd()
 (basename(BASE_FOLDER) == "examples") && (BASE_FOLDER = dirname(BASE_FOLDER))
 using Pkg
@@ -9,7 +11,7 @@ Pkg.activate(BASE_FOLDER)
 # Install all required packages if not present
 isfile(joinpath(BASE_FOLDER,"Manifest.toml")) || Pkg.instantiate()
 
-using Distributions, LinearAlgebra, QuantEcon
+using Combinatorics, Distributions, LightGraphs, LinearAlgebra, QuantEcon, Roots, SymPy
 using Nash
 
 ## Create game from provided payoff matrices
@@ -75,3 +77,20 @@ stationary_distributions(mc)
 # TODO AS zaburzenia
 
 plot_markov(10, mc)
+
+# Generate random symmetric game
+game = random_symmetric_2players_game(Binomial(10,1/2),2)
+
+# Find necessary values to find symmetric nash equilibrium
+x = symbols("x", real=true)
+find_symmetric_nash_equilibrium_2players_game(game, [x, 1-x])
+
+# Generate graph of relations that need to hold to make a game symmetric
+actions_no_vector = [2, 2, 2];
+graph = create_symmetries_graph(actions_no_vector)
+
+# Check single relation
+check_equality_condition(graph,((2,2,1),1), ((2,1,2),1))
+
+# Find all needed relations
+find_all_equalities(graph)

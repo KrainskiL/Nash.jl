@@ -7,6 +7,8 @@ using LinearAlgebra
 using Combinatorics
 using IterTools
 using QuantEcon
+using LightGraphs
+using SymPy
 
 @testset "games" begin
     ggame = generate_game([1 0; 0 1], [1 0; 0 1])
@@ -64,4 +66,23 @@ end
     @test is_irreducible(mc) == false
     @test period(mc) == 2
     @test is_aperiodic(mc) == false
+end
+
+@testset "symmetric" begin
+    game = random_symmetric_2players_game(Binomial(10,1/2),2)
+    @test typeof(game) == Dict{String,AbstractArray{Int64,2}}
+    @test game["player1"] == game["player2"]'
+
+    game = generate_game([1 0; 0 1], [1 0; 1 1])
+    x = symbols("x", real=true)
+    res = find_symmetric_nash_equilibrium_2players_game(game, [x, 1-x])
+    @test res == [0.0, 0.5, 1.0]
+
+    actions_no_vector = [2, 2];
+    graph = create_symmetries_graph(actions_no_vector)
+    @test length(vertices(graph.graph)) == 8
+    @test length(edges(graph.graph)) == 4
+    @test check_equality_condition(graph,((1,1),1), ((1,1),2)) == true
+    @test check_equality_condition(graph,((1,1),1), ((1,2),2)) == false
+    @test length(find_all_equalities(graph)) == 4
 end
