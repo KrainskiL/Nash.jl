@@ -23,13 +23,13 @@ end
 
 
 """
-    random_symmetric_2players_game(dist::Distributions.Sampleable,p1_size::Int,p2_size::Int)
+    find_symmetric_nash_equilibrium_2players_game(game::Dict{String,<:AbstractArray}, s::Array{SymPy.Sym,1})
 
-Returns random symmetric payoff matrices for 2 players with given number of actions
+Finds necessary values to find symmetric Nash equilibrium
 
 **Input parameters**
-* `dist::Distributions.Sampleable` - distribution from which payoffs are sampled
-* `p_size::Int` - number of actions of a player
+* `game::Dict{String,<:AbstractArray}` - dictionary of players and their payoff matrices
+* `s::Array{SymPy.Sym,1}` - collection of actions probabilities
 """
 function find_symmetric_nash_equilibrium_2players_game(game::Dict{String,<:AbstractArray},
                s::Array{SymPy.Sym,1})
@@ -85,7 +85,7 @@ end
 
 
 """
-    check_equality_condition(g::SymmetriesGraph, payout_1, payout_2)
+    find_all_equalities(g::SymmetriesGraph)
 
 Finds all payout tuples, that need to be equal
 
