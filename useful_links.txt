@@ -56,3 +56,7 @@ https://julia.quantecon.org/more_julia/optimization_solver_packages.html - depic
 Papers about optimization in Julia
 https://people.orie.cornell.edu/mru8/doc/udell14_convex.pdf - convex optimization
 https://arxiv.org/pdf/1909.10451.pdf - Stochastic Programming in Julia
+
+https://github.com/JuliaGeometry - Geometric Packages in Julia
+
+At the time being (July/August 2020) no package making cylindrical decomposition in Julia easy was found.

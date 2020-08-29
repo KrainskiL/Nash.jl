@@ -25,8 +25,7 @@ export get_payoff, best_reply, is_nash_q, iterate_best_reply
 export game2markov, plot_markov
 #symmetric.jl
 export random_symmetric_2players_game, find_symmetric_nash_equilibrium_2players_game, create_symmetries_graph, check_equality_condition, find_all_equalities
-
-# export game, getpayoff
+#NEOptim.jl
 
 #files
 include("utilities.jl")
@@ -34,5 +33,6 @@ include("games.jl")
 include("equilibria.jl")
 include("markov.jl")
 include("symmetric.jl")
+include("NEOptim.jl")
 
 end
