@@ -26,6 +26,7 @@ export game2markov, plot_markov
 #symmetric.jl
 export random_symmetric_2players_game, find_symmetric_nash_equilibrium_2players_game, create_symmetries_graph, check_equality_condition, find_all_equalities
 #NEOptim.jl
+export vFunction
 
 #files
 include("utilities.jl")

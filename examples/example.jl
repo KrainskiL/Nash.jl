@@ -11,7 +11,8 @@ Pkg.activate(BASE_FOLDER)
 # Install all required packages if not present
 isfile(joinpath(BASE_FOLDER,"Manifest.toml")) || Pkg.instantiate()
 
-using Combinatorics, Distributions, LightGraphs, LinearAlgebra, QuantEcon, Roots, SymPy
+using Combinatorics, Distributions, LightGraphs, LinearAlgebra, QuantEcon
+using Roots, SymPy
 using Nash
 
 ## Create game from provided payoff matrices
@@ -94,3 +95,9 @@ check_equality_condition(graph,((2,2,1),1), ((2,1,2),1))
 
 # Find all needed relations
 find_all_equalities(graph)
+
+# counting vFunction - three players coordination game
+pay = reshape([1 0 0 0 0 0 0 1], (2,2,2))
+g1 = generate_game(pay, pay, pay)
+vFunction(g1, [[1, 0], [1, 0], [1, 0]])
+vFunction(g1, [[1, 0], [1, 0], [0, 1]])

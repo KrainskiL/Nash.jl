@@ -11,7 +11,7 @@ Returns given payoff matrices for given number of players with given number of a
 * `payoffm` - payoff matrices
 """
 function generate_game(payoffm...)
-    !all(@. collect(payoffm) isa Array{<: Real}) && return @error "All arguments have to be arrays"
+    #!all(@. collect(payoffm) isa Array{<: Real}) && return @error "All arguments have to be arrays"
     !all(y->y==size.(payoffm)[1], size.(payoffm)) && return @error "All arrays should have same dimension"
     !all(size.(payoffm) .|> length .== length(payoffm)) && return @error "Dimensions of payoff matrices should equal to number of players (input arguments)"
     return Dict("player"*string(i)=>collect(payoffm)[i] for i in 1:length(payoffm))
