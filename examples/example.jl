@@ -12,7 +12,7 @@ Pkg.activate(BASE_FOLDER)
 isfile(joinpath(BASE_FOLDER,"Manifest.toml")) || Pkg.instantiate()
 
 using Combinatorics, Distributions, LightGraphs, LinearAlgebra, QuantEcon
-using Roots, SymPy
+using Roots, SymPy, Manifolds
 using Nash
 
 ## Create game from provided payoff matrices
@@ -101,3 +101,10 @@ pay = reshape([1 0 0 0 0 0 0 1], (2,2,2))
 g1 = generate_game(pay, pay, pay)
 vFunction(g1, [[1, 0], [1, 0], [1, 0]])
 vFunction(g1, [[1, 0], [1, 0], [0, 1]])
+
+# Creates cartersian product of simplices
+s1 = [[1, 0], [1, 0], [0, 1]]
+v1 = cart_prod_simplices(s1)
+
+s2 = [[1, 0], [1, 0], [1, 2, 3]]
+v2 = cart_prod_simplices(s2)

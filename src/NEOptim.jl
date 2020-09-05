@@ -3,19 +3,6 @@
 ###############################################
 
 """
-It is not possible to fully implement finding Nash Equilibria through
-optimization in pure Julia - the main Julia package with optimization algorithms
-(Optim.jl) https://julianlsolvers.github.io/Optim.jl/stable/ - at the time being
-supports only box-constrained and very simple manifold-constrained
-optimization (only first-order methods), therefore it is not possible to set
-cartesian product of simplexes as an optimization bound, I have not found any
-optimization package written in pure Julia which supoorts it, even in one of the
-most popular Python packages - ScyPy linear and non-linear constraints are
-available only in certain optimization methods (COBYLA, SLSQP and trust-constr)
-- https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html#scipy.optimize.minimize
-"""
-
-"""
 vFunction(game::Dict{String,<:AbstractArray},
                 s::Vector{Vector{T}}) where T<:Real
 
@@ -35,7 +22,7 @@ function vFunction(game::Dict{String,<:AbstractArray},
         error("Provided vectors are not a strategy profile")
     end
 
-v = 0
+v = 0.0
 
 for i in 1:length(s)
     PlayerActions = Matrix(1I, length(s[i]), length(s[i]))
@@ -49,5 +36,30 @@ end
 end
 
 return v
+
+end
+
+"""
+cart_prod_simplices(s::Vector{Vector{T}}) where T<:Real
+
+Creates cartesian product of probability simplices for a given vector of vectors (especially - for a strategy profile)
+
+from Manifold.jl
+function(ProbabilitySimplex(n)) creates n-probability simplex
+× - creates product
+
+**Input Parameters**
+* `s::Vector{Vector{T}}` - vector of vectors for which we create cartesian product of probability simplices
+"""
+
+function cart_prod_simplices(s::Vector{Vector{T}}) where T<:Real
+
+vec = ProbabilitySimplex(length(s[1]))
+
+for i in 2:length(s)
+vec = vec × ProbabilitySimplex(length(s[i]))
+end
+
+return vec
 
 end

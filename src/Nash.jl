@@ -14,6 +14,7 @@ using QuantEcon
 using Plots
 using Roots
 using SymPy
+using Manifolds
 
 #utilities.jl
 export outer, plot_br
@@ -26,7 +27,7 @@ export game2markov, plot_markov
 #symmetric.jl
 export random_symmetric_2players_game, find_symmetric_nash_equilibrium_2players_game, create_symmetries_graph, check_equality_condition, find_all_equalities
 #NEOptim.jl
-export vFunction
+export vFunction, cart_prod_simplices
 
 #files
 include("utilities.jl")
