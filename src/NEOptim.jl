@@ -63,3 +63,28 @@ end
 return vec
 
 end
+
+"""
+It is not possible to fully implement finding NE through optimization
+without heavily modifing Julia optimization packages
+
+The most promising at the time being is Manopt.jl (Manifold Optimization)
+https://github.com/JuliaManifolds/Manopt.jl using certain data types from
+Manifolds.jl (https://github.com/JuliaManifolds/Manifolds.jl).
+
+However, at the time being (06.09.2020) not every manifold type from Manifolds.jl
+is supported/imported to that library
+https://github.com/JuliaManifolds/Manopt.jl/blob/master/src/Manopt.jl
+- especially not Probability Simplex
+https://github.com/JuliaManifolds/Manifolds.jl/blob/master/src/manifolds/ProbabilitySimplex.jl
+crucial to finding NE through vFunction optimization
+
+Other packages are far less advanced - JuMP
+https://jump.dev/JuMP.jl/v0.21.1/installation/index.html
+is a Julia frontend for various solvers and solver syntax is the best for
+that library.
+
+Optim.jl at the time being supports only very simple manifold constraints and
+only for first-order algorithms
+https://julianlsolvers.github.io/Optim.jl/stable/#algo/manifolds/
+"""
