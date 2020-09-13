@@ -43,7 +43,7 @@ function plot_markov(no_steps::Int,
         mc::MarkovChain{Int,Array{Int,2},Array{Int,1}})
     no_states = stationary_distributions(mc)[1] |> length
     for i in 1:no_states
-        line = simulate(mc, 10, init = i)
+        line = simulate(mc, no_steps, init = i)
         i == 1 ? display(plot(1:no_steps, line, label = string(i), lw = 2)) : display(plot!(line, label = string(i), lw = 2))
     end
 end
