@@ -1,6 +1,11 @@
 module Nash
 
 #packages
+using Conda
+if ! ("sympy" in get.(Conda.parseconda(`list`),"name",nothing))
+    Conda.runconda(`install sympy -c anaconda -y`)
+end
+
 using Base.Threads
 using Distributions
 using LightGraphs
