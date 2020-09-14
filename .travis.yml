@@ -18,7 +18,7 @@ jobs:
       julia: 1.4
       os: linux
       script:
-        - pip install simpy
+        - pip3 install simpy
         - julia --project=docs/ -e 'using Pkg; Pkg.instantiate();
                                     Pkg.develop(PackageSpec(path=pwd()))'
         - julia --project=docs/ docs/make.jl
