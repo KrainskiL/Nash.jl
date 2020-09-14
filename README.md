@@ -18,6 +18,8 @@ Add Nash by running following code in Julia REPL
 ] add https://github.com/KrainskiL/Nash.jl
 ```
 
+Walkthrough on available functions is available in :bookmark_tabs: [Tutorial](https://krainskil.github.io/Nash.jl/dev/)
+
 Link to [API Reference](https://krainskil.github.io/Nash.jl/dev/reference/)
 
 **Example usage**
