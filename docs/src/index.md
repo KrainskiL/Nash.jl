@@ -1,6 +1,6 @@
 # Nash.jl
 
-`Nash.jl` is a package providing selected functionalities from game theory field. The package focuses mainly on providing basic functions to define games and finding Nash equilibria.It was created as part of academic game theory course.
+`Nash.jl` is a package providing selected functionalities from game theory field. The main package focus is to provide basic functions necessary to define games and finding Nash equilibria. It was created as part of academic algorithmic game theory course.
 
 
 Tutorial
@@ -9,16 +9,16 @@ Tutorial
 ## Games definition
 
 `Nash.jl` defines game in package specific format. Currently there are 3 functions supporting game definition:
-* `generate_game` - requires payoffs tensor as an argument to create game object with known payoffs values
-* `random_2players_game` - creates game object for 2 players with payoffs sampled randomly from provided distribution (from `Distributions.jl` package)
+* `generate_game` - requires payoffs tensor as an argument to create game object (dictionary) with known payoffs values
+* `random_2players_game` - creates game object for 2 players with payoffs sampled randomly from user-defined distribution (from `Distributions.jl` package)
 * `random_nplayers_game` - creates game object for specified number of players with payoffs sampled randomly from provided distribution (from `Distributions.jl` package)
 
-For 2-players game with payoffs for first player as follows:
+For 2-players game payoffs for player 1 are as follows:
 * 1 if _player1_ plays first action and _player2_ plays first action
 * 2 if _player1_ plays first action and _player2_ plays second action
 * 2.5 if _player1_ plays second action and _player2_ plays first action
 * 3 if _player1_ plays second action and _player2_ plays second action
-following function call may be used (payoffs for the second player analogous):
+following function call may be used (payoff scheme for player 2 is analogous):
 
 ```julia
 generate_game([1 2; 2.5 3],[2 3;3.5 4])
@@ -27,7 +27,7 @@ generate_game([1 2; 2.5 3],[2 3;3.5 4])
 >  "player1" => [1.0 2.0; 2.5 3.0]
 ```
 
-Generation of random 2-players game with payoffs drawn from normal distribution (mean - 0, std - 2), 2 actions for _player1_ and 3 actions for _player2_
+Generation of random 2-players game with payoffs drawn from normal distribution (mean - 0, std dev - 2), 2 actions for _player1_ and 3 actions for _player2_
 
 ```julia
 using Distributions
@@ -53,7 +53,7 @@ game = random_nplayers_game(Exponential(2),[2,2,2])
 
 ## Payoff profile and best reply
 
-To get payoff profile for game with mixed strategies use `get_payoff` function. Payoffs for 3-players game defined in Games definition section with 0.5 probability for all players actions:
+To get payoff profile for game with mixed strategies use `get_payoff` function. Payoffs for previously-defined random 3-players game with 0.5 probability for all players actions are as follows:
 
 ```julia
 get_payoff(game,[[0.5,0.5],[0.5,0.5],[0.5,0.5]])
@@ -73,7 +73,7 @@ best_reply(game, [[0.5,0.5],[0.5,0.5],[0.5,0.5]],2)
 > 1  0
 ```
 
-To use convex hull from `Polyhedra.jl` package specify `return_val="chull"`. May take considerable time to finish.
+To use convex hull from `Polyhedra.jl` package use `return_val="chull"`. May be time-cosnuming.
 
 ```julia
 best_reply(game, [[0.5,0.5],[0.5,0.5],[0.5,0.5]],2, return_val="chull")
@@ -143,7 +143,7 @@ find_all_equalities(g)
 
 ## Markov chain analysis
 
-Game may be represented as Markov chain using `game2markov` function (2-player games).
+Game may be also represented as Markov chain using `game2markov` function (for 2-player games).
 
 ```julia
 using Random
@@ -164,30 +164,19 @@ plot_markov(5,mc)
 
 ## Advanced Nash equlibria optimization
 
+`vFunction` checks difference between user-defined strategy profile and set of situations when all but i-th player plays defined strategy frofile and i-th player plays j-th pure action (where max(j) = number of player actions). If it is Nash Equilibrium - vFunction is equal to 0. 
+
 ```julia
 vFunction(game,[[0.5,0.5],[0.5,0.5]])
 > 0.421938354571314
 ```
 
-It is not possible to fully implement finding NE through optimization
-without heavily modifing Julia optimization packages
+By finding strategy profile minimizng vFunction to zero (via optimization) we may find Nash Equlibria. However, at the time being (09.2020) it is not possible to fully implement it without heavily modifing Julia optimization packages
 
-The most promising at the time being is Manopt.jl (Manifold Optimization)
-https://github.com/JuliaManifolds/Manopt.jl using certain data types from
-Manifolds.jl (https://github.com/JuliaManifolds/Manifolds.jl).
+The most promising at the time being is Manopt.jl (Manifold Optimization) https://github.com/JuliaManifolds/Manopt.jl using certain data types from
+Manifolds.jl (https://github.com/JuliaManifolds/Manifolds.jl). But not every manifold type from Manifolds.jl is supported/imported to that library
+https://github.com/JuliaManifolds/Manopt.jl/blob/master/src/Manopt.jl - especially not Probability Simplex - https://github.com/JuliaManifolds/Manifolds.jl/blob/master/src/manifolds/ProbabilitySimplex.jl crucial to finding NE through vFunction optimization.
 
-However, at the time being (06.09.2020) not every manifold type from Manifolds.jl
-is supported/imported to that library
-https://github.com/JuliaManifolds/Manopt.jl/blob/master/src/Manopt.jl
-- especially not Probability Simplex
-https://github.com/JuliaManifolds/Manifolds.jl/blob/master/src/manifolds/ProbabilitySimplex.jl
-crucial to finding NE through vFunction optimization
+Other packages are far less advanced - JuMP https://jump.dev/JuMP.jl/v0.21.1/installation/index.html is a Julia frontend for various solvers and solver syntax is the best for that library.
 
-Other packages are far less advanced - JuMP
-https://jump.dev/JuMP.jl/v0.21.1/installation/index.html
-is a Julia frontend for various solvers and solver syntax is the best for
-that library.
-
-Optim.jl at the time being supports only very simple manifold constraints and
-only for first-order algorithms
-https://julianlsolvers.github.io/Optim.jl/stable/#algo/manifolds/
+Optim.jl at the time being supports only very simple manifold constraints and only for first-order algorithms https://julianlsolvers.github.io/Optim.jl/stable/#algo/manifolds/
