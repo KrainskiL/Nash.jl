@@ -86,6 +86,9 @@ game = random_symmetric_2players_game(Binomial(10,1/2),2)
 x = symbols("x", real=true)
 find_symmetric_nash_equilibrium_2players_game(game, [x, 1-x])
 
+# Create euqtions for replicator
+create_replicator_eqs(game, [x, 1-x])
+
 # Generate graph of relations that need to hold to make a game symmetric
 actions_no_vector = [2, 2, 2];
 graph = create_symmetries_graph(actions_no_vector)
