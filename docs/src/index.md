@@ -141,6 +141,36 @@ find_all_equalities(g)
 > (((1, 2), 1), ((2, 1), 2))
 ```
 
+## Replicator
+To generate differential equations utilized for replicator for 2-player symmetric games:
+
+```julia
+using Random, Distributions, SymPy
+Random.seed!(42);
+game = random_symmetric_2players_game(Binomial(10,1/2), 2)
+x = symbols("x", real = true)
+create_replicator_eqs(game, [x, 1 - x])
+```
+
+For larger 2-player symmetric games:
+```julia
+game = random_symmetric_2players_game(Binomial(10,1/2), 4)
+x = symbols("x", real = true)
+y = symbols("y", real = true)
+z = symbols("z", real = true)
+create_replicator_eqs(game, [x, y, z, 1 - x - y - z])
+```
+
+Unfortunately, the most popular library for differential equations in Julia - [DifferentialEquations.jl](https://diffeq.sciml.ai/stable/) requires input in very specific form. To solve [ODE problem](https://diffeq.sciml.ai/stable/tutorials/ode_example/) it is neccessary to provide the equations warapped in a function bulit according to following syntax:
+```julia
+function lorenz!(du, u, p, t)
+ du[1] = p[1] * (u[2] - u[1])
+ du[2] = u[1] * (p[2] - u[3]) - u[2]
+ du[3] = u[1] * u[2] - p[3] * u[3]
+end
+```
+where ```du[i]``` represents each differential equation, ```p``` is the vector of coefficients and ```u``` is the vector of variables. It is non-trivial to automatically generate such function in a way that it can handle polynomials of any degree. What is more, DifferentialEquations.jl does not cooperate seamlessly with SymPy utilized for symbolic operations, which might be of help. Finally, multiple issues with stability of DifferentialEquations.jl were experienced.
+
 ## Markov chain analysis
 
 Game may be also represented as Markov chain using `game2markov` function (for 2-player games).
@@ -161,16 +191,6 @@ plot_markov(5,mc)
 ```
 
 ![](https://i.ibb.co/zX2sRmt/Markov-Chain5.png)
-
-## Replicator differential equations
-
-```julia
-using Random
-Random.seed!(42);
-game = random_symmetric_2players_game(Binomial(10,1/2),2)
-x = symbols("x", real=true)
-create_replicator_eqs(game, [x, 1-x])
-```
 
 ## Advanced Nash equlibria optimization
 
