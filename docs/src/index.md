@@ -173,10 +173,10 @@ vFunction(game,[[0.5,0.5],[0.5,0.5]])
 
 By finding strategy profile minimizng vFunction to zero (via optimization) we may find Nash Equlibria. However, at the time being (09.2020) it is not possible to fully implement it without heavily modifing Julia optimization packages
 
-The most promising at the time being is Manopt.jl (Manifold Optimization) https://github.com/JuliaManifolds/Manopt.jl using certain data types from
-Manifolds.jl (https://github.com/JuliaManifolds/Manifolds.jl). But not every manifold type from Manifolds.jl is supported/imported to that library
-https://github.com/JuliaManifolds/Manopt.jl/blob/master/src/Manopt.jl - especially not Probability Simplex - https://github.com/JuliaManifolds/Manifolds.jl/blob/master/src/manifolds/ProbabilitySimplex.jl crucial to finding NE through vFunction optimization.
+The most promising at the time being is [Manopt.jl](https://github.com/JuliaManifolds/Manopt.jl) (Manifold Optimization)  using certain data types from
+[Manifolds.jl](https://github.com/JuliaManifolds/Manifolds.jl). But not every manifold type from Manifolds.jl is supported/imported to that library
+[as we can see](https://github.com/JuliaManifolds/Manopt.jl/blob/master/src/Manopt.jl) - especially not [Probability Simplex](https://github.com/JuliaManifolds/Manifolds.jl/blob/master/src/manifolds/ProbabilitySimplex.jl) crucial to finding NE through vFunction optimization.
 
-Other packages are far less advanced - JuMP https://jump.dev/JuMP.jl/v0.21.1/installation/index.html is a Julia frontend for various solvers and solver syntax is the best for that library.
+Other packages are far less advanced - [JuMP](https://jump.dev/JuMP.jl/v0.21.1/installation/index.html) is a Julia frontend for various solvers and solver syntax is the best for that library.
 
-Optim.jl at the time being supports only very simple manifold constraints and only for first-order algorithms https://julianlsolvers.github.io/Optim.jl/stable/#algo/manifolds/
+[Optim.jl](https://julianlsolvers.github.io/Optim.jl/stable/#algo/manifolds/) at the time being supports only very simple manifold constraints and only for first-order algorithms.
