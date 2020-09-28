@@ -14,7 +14,6 @@ profile is a Nash Equilibrium, if greater - not
 * `game::Dict{String,<:AbstractArray}` - dictionary containing a game
 * `s::Vector{Vector{T}}` - strategy profile for which we want to compute V - function
 """
-
 function vFunction(game::Dict{String,<:AbstractArray},
                 s::Vector{Vector{T}}) where T<:Real
 

@@ -1,7 +1,9 @@
 
 """
     create_replicator_eqs(game::Dict{String,<:AbstractArray}, s::Array{SymPy.Sym,1})
+    
 Creates differential equations for replicator
+
 **Input parameters**
 * `game::Dict{String,<:AbstractArray}` - dictionary of players and their payoff matrices
 * `s::Array{SymPy.Sym,1}` - collection of symbolic actions probabilities

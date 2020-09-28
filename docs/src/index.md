@@ -162,6 +162,16 @@ plot_markov(5,mc)
 
 ![](https://i.ibb.co/zX2sRmt/Markov-Chain5.png)
 
+## Replicator differential equations
+
+```julia
+using Random
+Random.seed!(42);
+game = random_symmetric_2players_game(Binomial(10,1/2),2)
+x = symbols("x", real=true)
+create_replicator_eqs(game, [x, 1-x])
+```
+
 ## Advanced Nash equlibria optimization
 
 `vFunction` checks difference between user-defined strategy profile and set of situations when all but i-th player plays defined strategy frofile and i-th player plays j-th pure action (where max(j) = number of player actions). If it is Nash Equilibrium - vFunction is equal to 0. 

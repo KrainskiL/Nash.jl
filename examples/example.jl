@@ -74,8 +74,6 @@ communication_classes(mc)
 period(mc)
 is_aperiodic(mc)
 stationary_distributions(mc)
-# TODO AS wizualizacja grafow
-# TODO AS zaburzenia
 
 plot_markov(10, mc)
 
@@ -86,7 +84,7 @@ game = random_symmetric_2players_game(Binomial(10,1/2),2)
 x = symbols("x", real=true)
 find_symmetric_nash_equilibrium_2players_game(game, [x, 1-x])
 
-# Create euqtions for replicator
+# Create equations for replicator
 create_replicator_eqs(game, [x, 1-x])
 
 # Generate graph of relations that need to hold to make a game symmetric

@@ -13,7 +13,6 @@ Utilities
 ```@docs
 outer
 plot_br
-cart_prod_simplices
 ```
 
 Games
@@ -49,4 +48,10 @@ find_symmetric_nash_equilibrium_2players_game
 create_symmetries_graph
 check_equality_condition
 find_all_equalities
+```
+
+Symmetric games
+----------------------
+```@docs
+create_replicator_eqs
 ```

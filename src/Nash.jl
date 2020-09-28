@@ -33,6 +33,8 @@ export game2markov, plot_markov
 export random_symmetric_2players_game, find_symmetric_nash_equilibrium_2players_game, create_symmetries_graph, check_equality_condition, find_all_equalities
 #NEOptim.jl
 export vFunction, cart_prod_simplices
+#replicator.jl
+export create_replicator_eqs
 
 #files
 include("utilities.jl")
@@ -41,5 +43,5 @@ include("equilibria.jl")
 include("markov.jl")
 include("symmetric.jl")
 include("NEOptim.jl")
-
+include("replicator.jl")
 end
