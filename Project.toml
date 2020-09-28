@@ -1,7 +1,7 @@
 name = "Nash"
 uuid = "bd078fd0-4306-4e4b-b0ec-dacbec99dedf"
-authors = ["Lukasz Krainski <lukasz.krainski123@gmail.com>"]
-version = "0.1.0"
+authors = ["KAE PhD Candidates Team"]
+version = "1.0.0"
 
 [deps]
 CDDLib = "3391f64e-dcde-5f30-b752-e11513730f60"
