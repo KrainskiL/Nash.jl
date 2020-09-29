@@ -1,6 +1,6 @@
 # Nash.jl
 
-`Nash.jl` is a package providing selected functionalities from game theory field. The main package focus is to provide basic functions necessary to define games and finding Nash equilibria. It was created as part of academic algorithmic game theory course.
+`Nash.jl` is a package providing selected functionalities from game theory field. The main package focus is to provide basic functions necessary to define games and finding Nash equilibria. It was created as part of academic computational game theory course.
 
 
 Tutorial
